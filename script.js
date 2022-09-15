@@ -28,16 +28,32 @@ function addDecimal() {
   }
 }
 
+// CALCULATE FIRST AND SECOND VALUES DEPENDING ON OPERATOR
+const calculate = {
+  "/": (firstNumber, secondNumber) => firstNumber / secondNumber,
+  "*": (firstNumber, secondNumber) => firstNumber * secondNumber,
+  "+": (firstNumber, secondNumber) => firstNumber + secondNumber,
+  "-": (firstNumber, secondNumber) => firstNumber - secondNumber,
+  "=": (firstNumber, secondNumber) => secondNumber,
+};
+
 function useOperator(operator) {
   const currentValue = Number(calculatorDisplay.textContent);
+  // PREVENT MULTIPLE OPERATORS
+  if (operatorValue && awaitingNextValue) {
+    operatorValue = operator;
+    return;
+  }
   // ASSIGN firstValue IF NO VALUE
   if (!firstValue) {
     firstValue = currentValue;
   } else {
+    const calculation = calculate[operatorValue](firstValue, currentValue);
+    calculatorDisplay.textContent = calculation;
+    firstValue = calculation;
   }
   // READY FOR NEXT VALUE, STORE OPERATOR
   awaitingNextValue = true;
-  operatorValue = operator;
   operatorValue = operator;
 }
 
@@ -52,7 +68,7 @@ inputBtns.forEach((inputBtn) => {
   }
 });
 
-// RESET ALL VALUESM DISPLAY
+// RESET ALL VALUES DISPLAY
 function resetAll() {
   firstValue = 0;
   operatorValue = "";
